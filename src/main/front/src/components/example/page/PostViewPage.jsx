@@ -1,3 +1,4 @@
+/*
 import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import styled from "styled-components";
@@ -92,4 +93,4 @@ const PostViewPage = (props) => {
     );
 }
 
-export default PostViewPage;
+export default PostViewPage;*/
