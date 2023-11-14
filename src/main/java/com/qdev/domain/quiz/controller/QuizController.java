@@ -2,6 +2,7 @@ package com.qdev.domain.quiz.controller;
 
 import com.qdev.domain.quiz.request.QuizCreate;
 import com.qdev.domain.quiz.service.QuizService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class QuizController {
 
     // 퀴즈 작성
     @PostMapping("/quizzes")
-    public ResponseEntity<Void> createQuiz(@RequestBody QuizCreate request) {
+    public ResponseEntity<Void> createQuiz(@RequestBody @Valid QuizCreate request) {
         quizService.create(request);
         return ResponseEntity.ok().build();
     }

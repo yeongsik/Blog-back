@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,12 +29,22 @@ class QuizControllerTest {
     void test1() throws Exception {
         mockMvc.perform(post("/quizzes")
                         .contentType(APPLICATION_JSON)
-                        .content("{\"name\": \"테스트 퀴즈\", \"description\": \"테스크 퀴즈 설명입니다ㅏ.\" }")
+                        .content("{\"name\": \"테스트 퀴즈\", \"description\": \"테스크 퀴즈 설명입니다.\" }")
                 ).andExpect(status().isOk())
                 .andDo(print());
 
         long cnt = quizRepository.count();
 
         assertEquals(1L, cnt);
+    }
+
+    @Test
+    @DisplayName("퀴즈 작성 시 - 실패(퀴즈 제목 미입력)")
+    void test2() throws Exception {
+        mockMvc.perform(post("/quizzes")
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"name\": \"\", \"description\": \"테스크 퀴즈 설명입니다.\" }"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 }
