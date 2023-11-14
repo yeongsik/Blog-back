@@ -1,40 +1,27 @@
 import React from "react";
 import styled from "styled-components";
-import BottomTap from "../ui/BottomTap";
 
-const Wrapper = styled.footer`
+const StyledFooter = styled.footer`
   position: fixed;
   bottom: 0;
-  left: 0;
+  background-color: bisque;
   width: 100%;
-  background-color: #333;
-  color:white;
-  padding: 10px;
-  height: 50px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  height: 5rem;
 `;
-  
 
-const Container = styled.div`
-    
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 `;
 
 
 const Footer = (props) => {
     return (
-        <Wrapper>
-            <BottomTap icon="퀴즈" onClick={() => {
-                alert("퀴즈");
-            }} />
-            <BottomTap icon="리그" onClick={() => {
-                alert("리그");
-            }} />
-            <BottomTap icon="토론" onClick={() => {
-                alert("토론");
-            }} />
-
+        <StyledFooter>
+            <Wrapper>
+                Footer 입니다.
                 {/*
                 푸터에 들어갈 내용
                 1. 문제 푸는 탭
@@ -42,7 +29,8 @@ const Footer = (props) => {
                 3. 리그 탭
                 4. ABOUT 탭
                 */}
-        </Wrapper>
+            </Wrapper>
+        </StyledFooter>
     )
 
 };
