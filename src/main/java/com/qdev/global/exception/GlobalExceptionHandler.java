@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> validHandler(MethodArgumentNotValidException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        ErrorResponse errorResponse = new ErrorResponse("400.1", "잘못된 요청입니다.");
         for (FieldError fieldError : e.getFieldErrors()) {
             errorResponse.addValidation(fieldError);
         }

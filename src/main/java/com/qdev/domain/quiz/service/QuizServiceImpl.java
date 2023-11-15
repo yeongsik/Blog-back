@@ -3,6 +3,7 @@ package com.qdev.domain.quiz.service;
 import com.qdev.domain.quiz.entity.Quiz;
 import com.qdev.domain.quiz.repository.QuizRepository;
 import com.qdev.domain.quiz.request.QuizCreate;
+import com.qdev.domain.quiz.response.QuizRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +16,10 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public void create(QuizCreate quizCreate) {
         quizRepository.save(new Quiz(quizCreate.getName(), quizCreate.getDescription()));
+    }
+
+    @Override
+    public QuizRead readOne(Long quizId) {
+        return null;
     }
 }
