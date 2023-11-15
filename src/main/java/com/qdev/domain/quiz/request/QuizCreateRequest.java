@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class QuizCreate {
+public class QuizCreateRequest {
 
     @NotBlank(message = "퀴즈 제목을 입력해주세요.")
     private String name;

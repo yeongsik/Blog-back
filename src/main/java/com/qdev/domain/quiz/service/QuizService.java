@@ -1,11 +1,11 @@
 package com.qdev.domain.quiz.service;
 
-import com.qdev.domain.quiz.request.QuizCreate;
-import com.qdev.domain.quiz.response.QuizRead;
+import com.qdev.domain.quiz.request.QuizCreateRequest;
+import com.qdev.domain.quiz.response.QuizReadResponse;
 
 public interface QuizService {
 
-    void create(QuizCreate quizCreate);
+    void create(QuizCreateRequest quizCreate);
 
-    QuizRead readOne(Long quizId);
+    QuizReadResponse readOne(Long quizId);
 }

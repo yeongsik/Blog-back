@@ -1,4 +1,4 @@
-package com.qdev.global.exception;
+package com.qdev.global.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

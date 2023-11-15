@@ -1,4 +1,4 @@
 package com.qdev.domain.quiz.request;
 
-public class QuizSearch {
+public class QuizModifyRequest {
 }

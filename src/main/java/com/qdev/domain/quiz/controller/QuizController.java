@@ -1,7 +1,7 @@
 package com.qdev.domain.quiz.controller;
 
-import com.qdev.domain.quiz.request.QuizCreate;
-import com.qdev.domain.quiz.response.QuizRead;
+import com.qdev.domain.quiz.request.QuizCreateRequest;
+import com.qdev.domain.quiz.response.QuizReadResponse;
 import com.qdev.domain.quiz.service.QuizService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class QuizController {
 
     // 퀴즈 작성
     @PostMapping("/quizzes")
-    public ResponseEntity<Void> createQuiz(@RequestBody @Valid QuizCreate request) {
+    public ResponseEntity<Void> createQuiz(@RequestBody @Valid QuizCreateRequest request) {
         quizService.create(request);
         return ResponseEntity.ok().build();
     }
@@ -26,14 +26,14 @@ public class QuizController {
 
     // 퀴즈 조회
     @GetMapping("/quizzes/{quizId}")
-    public ResponseEntity<QuizRead> readQuiz(@PathVariable Long quizId) {
-        QuizRead quizRead = quizService.readOne(quizId);
+    public ResponseEntity<QuizReadResponse> readQuiz(@PathVariable Long quizId) {
+        QuizReadResponse quizRead = quizService.readOne(quizId);
         return ResponseEntity.ok(quizRead);
     }
 
     // 퀴즈 다건 조회
     @GetMapping("/quizzes")
-    public ResponseEntity<List<QuizRead>> readQuizzes() {
+    public ResponseEntity<List<QuizReadResponse>> readQuizzes() {
         return null;
     }
 

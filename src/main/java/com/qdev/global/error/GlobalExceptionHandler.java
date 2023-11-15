@@ -1,6 +1,6 @@
-package com.qdev.global.exception;
+package com.qdev.global.error;
 
-import org.springframework.http.HttpStatus;
+import com.qdev.global.error.exception.ApiException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> apiExceptionHandler(ApiException e) {
+        ErrorResponse errorResponse = new ErrorResponse("400.1", e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
 }

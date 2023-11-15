@@ -83,8 +83,19 @@ class QuizControllerTest {
         mockMvc.perform(get("/quizzes/" + save.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.validationList[*].field").value("description"))
-//                .andExpect(jsonPath("$.validationList[*].errorMessage").value("퀴즈 설명을 입력해주세요."))
+                .andExpect(jsonPath("$.name").value("테스트 제목"))
+                .andExpect(jsonPath("$.description").value("테스트 내용 설명"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("퀴즈 단건 조회 - 실패(없는 quizId)")
+    void test6() throws Exception {
+        mockMvc.perform(get("/quizzes/" + 2L)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400.1"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 퀴즈입니다."))
                 .andDo(print());
     }
 }
