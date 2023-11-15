@@ -34,7 +34,7 @@ public class QuizController {
     // 퀴즈 다건 조회
     @GetMapping("/quizzes")
     public ResponseEntity<List<QuizReadResponse>> readQuizzes() {
-        return null;
+        return ResponseEntity.ok(quizService.readAll());
     }
 
     // 퀴즈 수정

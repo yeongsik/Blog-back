@@ -8,6 +8,8 @@ import com.qdev.domain.quiz.response.QuizReadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -24,5 +26,12 @@ public class QuizServiceImpl implements QuizService {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(NotFoundQuizException::new);
         return new QuizReadResponse(quiz.getName(), quiz.getDescription());
+    }
+
+    @Override
+    public List<QuizReadResponse> readAll() {
+        return quizRepository.findAll().stream()
+                .map(q -> new QuizReadResponse(q.getName(), q.getDescription()))
+                .toList();
     }
 }

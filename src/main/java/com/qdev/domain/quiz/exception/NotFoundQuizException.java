@@ -8,4 +8,8 @@ public class NotFoundQuizException extends ApiException {
         super("존재하지 않는 퀴즈입니다.");
     }
 
+    public NotFoundQuizException(String message) {
+        super(message);
+    }
+
 }

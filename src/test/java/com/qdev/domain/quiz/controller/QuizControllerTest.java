@@ -2,7 +2,6 @@ package com.qdev.domain.quiz.controller;
 
 import com.qdev.domain.quiz.entity.Quiz;
 import com.qdev.domain.quiz.repository.QuizRepository;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -43,8 +41,7 @@ class QuizControllerTest {
                         .content("{\"name\": \"테스트 퀴즈\", \"description\": \"테스트 퀴즈 설명입니다.\" }")
                 ).andExpect(status().isOk())
                 .andDo(print());
-        long cnt = quizRepository.count();
-        assertEquals(1L, cnt);
+        assertEquals(1L, quizRepository.count());
     }
 
     @Test
@@ -76,9 +73,7 @@ class QuizControllerTest {
     @Test
     @DisplayName("퀴즈 단건 조회 - 성공")
     void test5() throws Exception {
-
         Quiz save = quizRepository.save(new Quiz("테스트 제목", "테스트 내용 설명"));
-
 
         mockMvc.perform(get("/quizzes/" + save.getId())
                         .contentType(APPLICATION_JSON))
@@ -96,6 +91,21 @@ class QuizControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400.1"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 퀴즈입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("퀴즈 다건 조회 - 성공")
+    void test7() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            quizRepository.save(new Quiz("테스트 퀴즈 이름" + i, "테스트 퀴즈 설명 " + i));
+        }
+
+        mockMvc.perform(get("/quizzes")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[*].name").value("테스트 퀴즈 이름"))
+//                .andExpect(jsonPath("$.message").value("존재하지 않는 퀴즈입니다."))
                 .andDo(print());
     }
 }
