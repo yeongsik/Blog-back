@@ -1,7 +1,7 @@
-package com.qdev.domain.user.controller;
+package com.qdev.domain.member.controller;
 
-import com.qdev.domain.user.request.UserCreateRequest;
-import com.qdev.domain.user.service.UserService;
+import com.qdev.domain.member.request.MemberCreateRequest;
+import com.qdev.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     // 회원 생성
     @PostMapping("/users")
-    public ResponseEntity<Void> createUser(@RequestBody UserCreateRequest request) {
-        userService.createUser(request);
+    public ResponseEntity<Void> createUser(@RequestBody @Valid MemberCreateRequest request) {
+        memberService.createMember(request);
         return ResponseEntity.ok().build();
     }
 
