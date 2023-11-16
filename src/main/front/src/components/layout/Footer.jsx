@@ -1,19 +1,26 @@
 import React from "react";
 import styled from "styled-components";
 
-const Wrapper = styled.div`
-  
+const StyledFooter = styled.footer`
+  position: fixed;
+  bottom: 0;
+  background-color: bisque;
+  width: 100%;
+  height: 5rem;
 `;
 
-const Container = styled.div`
-    
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 `;
 
 
 const Footer = (props) => {
     return (
-        <Wrapper>
-            <Container>
+        <StyledFooter>
+            <Wrapper>
                 Footer 입니다.
                 {/*
                 푸터에 들어갈 내용
@@ -22,8 +29,8 @@ const Footer = (props) => {
                 3. 리그 탭
                 4. ABOUT 탭
                 */}
-            </Container>
-        </Wrapper>
+            </Wrapper>
+        </StyledFooter>
     )
 
 };
