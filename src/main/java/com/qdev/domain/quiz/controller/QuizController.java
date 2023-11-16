@@ -1,6 +1,7 @@
 package com.qdev.domain.quiz.controller;
 
 import com.qdev.domain.quiz.request.QuizCreateRequest;
+import com.qdev.domain.quiz.request.QuizModifyRequest;
 import com.qdev.domain.quiz.response.QuizReadResponse;
 import com.qdev.domain.quiz.service.QuizService;
 import jakarta.validation.Valid;
@@ -23,7 +24,6 @@ public class QuizController {
         return ResponseEntity.ok().build();
     }
 
-
     // 퀴즈 조회
     @GetMapping("/quizzes/{quizId}")
     public ResponseEntity<QuizReadResponse> readQuiz(@PathVariable Long quizId) {
@@ -39,13 +39,17 @@ public class QuizController {
 
     // 퀴즈 수정
     @PatchMapping("/quizzes/{quizId}")
-    public ResponseEntity<Void> modifyQuiz(@PathVariable Long quizId) {
+    public ResponseEntity<Void> modifyQuiz(@PathVariable Long quizId,
+                                           @RequestBody @Valid QuizModifyRequest request) {
+        quizService.modify(quizId, request);
         return ResponseEntity.ok().build();
     }
 
     // 퀴즈 삭제
     @DeleteMapping("/quizzes/{quizId}")
     public ResponseEntity<Void> removeQuiz(@PathVariable Long quizId) {
+
+        quizService.remove(quizId);
         return ResponseEntity.ok().build();
     }
 }

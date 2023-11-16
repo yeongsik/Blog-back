@@ -1,5 +1,6 @@
 package com.qdev.domain.quiz.entity;
 
+import com.qdev.domain.quiz.request.QuizModifyRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,5 +23,10 @@ public class Quiz {
     public Quiz(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public void update(QuizModifyRequest quizModifyRequest) {
+        name = quizModifyRequest.getName();
+        description = quizModifyRequest.getDescription();
     }
 }
