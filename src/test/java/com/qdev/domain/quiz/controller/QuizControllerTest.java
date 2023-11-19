@@ -32,7 +32,8 @@ class QuizControllerTest {
     @Autowired
     private QuizRepository quizRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void clean() {
