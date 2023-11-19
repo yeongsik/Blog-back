@@ -48,4 +48,11 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
     // 회원 삭제
+
+    @DeleteMapping("/members/{memberId}")
+    public ResponseEntity<Void> removeMember(@PathVariable Long memberId) {
+        memberService.remove(memberId);
+
+        return ResponseEntity.ok().build();
+    }
 }

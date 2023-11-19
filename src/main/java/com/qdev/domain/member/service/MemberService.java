@@ -14,4 +14,6 @@ public interface MemberService {
     List<MemberReadResponse> readMembers();
 
     void modify(Long memberId, MemberModifyRequest memberModifyRequest);
+
+    void remove(Long memberId);
 }

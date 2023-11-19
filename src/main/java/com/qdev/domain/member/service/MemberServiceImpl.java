@@ -53,4 +53,10 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
         member.update(memberModifyRequest);
     }
+
+    @Override
+    public void remove(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        memberRepository.delete(member);
+    }
 }

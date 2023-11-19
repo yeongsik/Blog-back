@@ -1,6 +1,8 @@
 package com.qdev.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qdev.domain.member.entity.Member;
+import com.qdev.domain.member.entity.MemberType;
 import com.qdev.domain.member.repository.MemberRepository;
 import com.qdev.domain.member.request.MemberCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,7 +32,8 @@ class MemberControllerTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void clean() {
@@ -42,7 +47,7 @@ class MemberControllerTest {
                 new MemberCreateRequest("test@gmail.com",
                         "테스트 닉네임", "testpassword" ,
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isOk())
@@ -59,7 +64,7 @@ class MemberControllerTest {
                         "테스트 닉네임",
                         "testpassword",
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -78,7 +83,7 @@ class MemberControllerTest {
                         "테스트 닉네임",
                         "testpassword",
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -97,7 +102,7 @@ class MemberControllerTest {
                         "",
                         "testpassword",
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -116,7 +121,7 @@ class MemberControllerTest {
                         "테스트 닉네임",
                         "   ",
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -135,7 +140,7 @@ class MemberControllerTest {
                         "테스트 닉네임",
                         "testpassword",
                         "   "));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -154,7 +159,7 @@ class MemberControllerTest {
                         "테스트 닉네임",
                         "testpassword1234",
                         "testpassword"));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/members")
                         .contentType(APPLICATION_JSON)
                         .content(content)
                 ).andExpect(status().isBadRequest())
@@ -162,4 +167,18 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.message").value("비밀번호와 비밀번호 확인이 일치하지 않습니다."))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("유저 삭제 - 성공")
+    void test8() throws Exception {
+        // given
+        Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
+
+        mockMvc.perform(delete("/members/" + saveMember.getId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        assertTrue(memberRepository.findById(saveMember.getId()).isEmpty());
+    }
+
 }
