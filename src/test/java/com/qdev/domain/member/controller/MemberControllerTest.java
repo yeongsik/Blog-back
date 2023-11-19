@@ -5,6 +5,8 @@ import com.qdev.domain.member.entity.Member;
 import com.qdev.domain.member.entity.MemberType;
 import com.qdev.domain.member.repository.MemberRepository;
 import com.qdev.domain.member.request.MemberCreateRequest;
+import com.qdev.domain.member.request.MemberModifyRequest;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +15,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,8 +44,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 성공")
-    void test1() throws Exception {
+    @DisplayName("회원 생성 - 성공")
+    void createMemberSuccess() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("test@gmail.com",
                         "테스트 닉네임", "testpassword" ,
@@ -57,8 +60,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (이메일 미입력)")
-    void test2() throws Exception {
+    @DisplayName("회원 생성 - 실패 (이메일 미입력)")
+    void createMemberFailBecauseInvalidInputOfEmail() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("",
                         "테스트 닉네임",
@@ -76,8 +79,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (이메일 패턴이 아닐 때)")
-    void test3() throws Exception {
+    @DisplayName("회원 생성 - 실패 (이메일 패턴이 아닐 때)")
+    void createMemberFailBecauseInvalidInputOfEmailPattern() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("testgmail.com",
                         "테스트 닉네임",
@@ -95,8 +98,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (닉네임 미입력)")
-    void test4() throws Exception {
+    @DisplayName("회원 생성 - 실패 (닉네임 미입력)")
+    void createMemberFailBecauseInvalidInputOfNickname() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("test@gmail.com",
                         "",
@@ -114,8 +117,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (비밀번호 미입력)")
-    void test5() throws Exception {
+    @DisplayName("회원 생성 - 실패 (비밀번호 미입력)")
+    void createMemberFailBecauseInvalidInputOfPassword() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("test@gmail.com",
                         "테스트 닉네임",
@@ -133,8 +136,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (비밀번호 확인 미입력)")
-    void test6() throws Exception {
+    @DisplayName("회원 생성 - 실패 (비밀번호 확인 미입력)")
+    void createMemberFailBecauseInvalidInputOfPasswordConfirm() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("test@gmail.com",
                         "테스트 닉네임",
@@ -152,8 +155,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 생성 - 실패 (비밀번호와 비밀번호 확인 불일치)")
-    void test7() throws Exception {
+    @DisplayName("회원 생성 - 실패 (비밀번호와 비밀번호 확인 불일치)")
+    void createMemberFailBecauseNotSamePasswordAndPasswordConfirm() throws Exception {
         String content = objectMapper.writeValueAsString(
                 new MemberCreateRequest("test@gmail.com",
                         "테스트 닉네임",
@@ -169,8 +172,74 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("유저 삭제 - 성공")
-    void test8() throws Exception {
+    @DisplayName("회원 단건 조회 - 성공")
+    void readOneMemberSuccess() throws Exception {
+        // given
+        Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
+
+        mockMvc.perform(get("/members/" + saveMember.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("test1234@gmail.com"))
+                .andExpect(jsonPath("$.nickname").value("테스트 닉네임"))
+                .andExpect(jsonPath("$.memberType").value("NORMAL"))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("회원 단건 조회 - 실패(존재하지 않은 회원)")
+    void readOneMemberFailBecauseNotFoundMember() throws Exception {
+
+        // expected
+        mockMvc.perform(get("/members/" + 1L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400.1"))
+                .andExpect(jsonPath("$.message").value("존재하지 않은 회원입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원 다건 조회 - 성공")
+    void readAllMemberSuccess() throws Exception {
+        memberRepository.saveAll(Arrays.asList(
+                new Member("test1@gmail.com", "테스트 닉네임1", "test@1234", MemberType.NORMAL),
+                new Member("test2@gmail.com", "테스트 닉네임2", "test@1234", MemberType.NORMAL),
+                new Member("test3@gmail.com", "테스트 닉네임3", "test@1234", MemberType.NORMAL),
+                new Member("test4@gmail.com", "테스트 닉네임4", "test@1234", MemberType.NORMAL),
+                new Member("test5@gmail.com", "테스트 닉네임5", "test@1234", MemberType.NORMAL)
+        ));
+
+        // expected
+        mockMvc.perform(get("/members"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$" , Matchers.hasSize(5)))
+//                .andExpect(jsonPath("$.message").value("존재하지 않은 회원입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원 수정 - 성공")
+    void modifyMemberSuccess() throws Exception {
+        // given
+        Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
+        String json = objectMapper.writeValueAsString(new MemberModifyRequest("테스트 닉네임 수정", "test1234567@", "test1234567@"));
+
+        // when
+        mockMvc.perform(patch("/members/" + saveMember.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+        Member modifiedMember = memberRepository.findById(saveMember.getId()).get();
+        assertEquals("테스트 닉네임 수정" , modifiedMember.getNickname());
+        assertEquals("test1234567@" , modifiedMember.getPassword());
+    }
+
+    @Test
+    @DisplayName("회원 삭제 - 성공")
+    void removeMemberSuccess() throws Exception {
         // given
         Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
 
@@ -179,6 +248,17 @@ class MemberControllerTest {
                 .andDo(print());
 
         assertTrue(memberRepository.findById(saveMember.getId()).isEmpty());
+    }
+
+    @Test
+    @DisplayName("회원 삭제 - 실패(존재 하지 않는 회원)")
+    void removeMemberFailBecauseNotFoundMember() throws Exception {
+        //expected
+        mockMvc.perform(delete("/members/" + 1L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400.1"))
+                .andExpect(jsonPath("$.message").value("존재하지 않은 회원입니다."))
+                .andDo(print());
     }
 
 }
