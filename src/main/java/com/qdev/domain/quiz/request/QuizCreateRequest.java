@@ -1,6 +1,7 @@
 package com.qdev.domain.quiz.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class QuizCreateRequest {
     @NotBlank(message = "퀴즈 설명을 입력해주세요.")
     private String description;
 
+    @Builder
     public QuizCreateRequest(String name, String description) {
         this.name = name;
         this.description = description;

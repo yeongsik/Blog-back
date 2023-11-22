@@ -1,6 +1,7 @@
 package com.qdev.domain.member.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class MemberModifyRequest {
     @NotBlank(message = "비밀번호 확인을 입력해주세요.")
     private String passwordConfirm;
 
+    @Builder
     public MemberModifyRequest(String nickname, String password, String passwordConfirm) {
         this.nickname = nickname;
         this.password = password;
