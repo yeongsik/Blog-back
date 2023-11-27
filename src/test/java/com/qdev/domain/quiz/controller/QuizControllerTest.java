@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,7 +46,10 @@ class QuizControllerTest {
     @DisplayName("퀴즈 작성 시 - 성공")
     void test1() throws Exception {
 
-        QuizCreateRequest quizCreateRequest = new QuizCreateRequest("테스트 퀴즈", "테스트 퀴즈 설명입니다.");
+        QuizCreateRequest quizCreateRequest = QuizCreateRequest.builder()
+                .name("테스트 퀴즈")
+                .description("테스트 퀴즈 설명입니다.")
+                .build();
         String content = objectMapper.writeValueAsString(quizCreateRequest);
         mockMvc.perform(post("/quizzes")
                         .contentType(APPLICATION_JSON)
@@ -58,7 +63,10 @@ class QuizControllerTest {
     @DisplayName("퀴즈 작성 시 - 실패(퀴즈 제목 미입력)")
     void test2() throws Exception {
 
-        QuizCreateRequest quizCreateRequest = new QuizCreateRequest("", "테스트 퀴즈 설명입니다.");
+        QuizCreateRequest quizCreateRequest = QuizCreateRequest.builder()
+                .description("테스트 퀴즈 설명입니다.")
+                .build();
+
         String content = objectMapper.writeValueAsString(quizCreateRequest);
         mockMvc.perform(post("/quizzes")
                         .contentType(APPLICATION_JSON)
@@ -75,7 +83,10 @@ class QuizControllerTest {
     @DisplayName("퀴즈 작성 시 - 실패(퀴즈 설명 미입력)")
     void test3() throws Exception {
 
-        QuizCreateRequest quizCreateRequest = new QuizCreateRequest("테스트 퀴즈", "    ");
+        QuizCreateRequest quizCreateRequest = QuizCreateRequest.builder()
+                .name("테스트 퀴즈")
+                .build();
+
         String content = objectMapper.writeValueAsString(quizCreateRequest);
         mockMvc.perform(post("/quizzes")
                         .contentType(APPLICATION_JSON)
@@ -89,7 +100,10 @@ class QuizControllerTest {
     @Test
     @DisplayName("퀴즈 단건 조회 - 성공")
     void test5() throws Exception {
-        Quiz save = quizRepository.save(new Quiz("테스트 제목", "테스트 내용 설명"));
+        Quiz save = quizRepository.save(Quiz.builder()
+                .name("테스트 제목")
+                .description("테스트 내용 설명")
+                .build());
 
         mockMvc.perform(get("/quizzes/" + save.getId())
                         .contentType(APPLICATION_JSON))
@@ -113,9 +127,18 @@ class QuizControllerTest {
     @Test
     @DisplayName("퀴즈 다건 조회 - 성공")
     void test7() throws Exception {
-        for (int i = 0; i < 10; i++) {
-            quizRepository.save(new Quiz("테스트 퀴즈 이름" + i, "테스트 퀴즈 설명 " + i));
-        }
+        quizRepository.saveAll(Arrays.asList(
+                Quiz.builder().name("테스트 퀴즈 이름 1").description("테스트 퀴즈 설명 1").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 2").description("테스트 퀴즈 설명 2").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 3").description("테스트 퀴즈 설명 3").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 4").description("테스트 퀴즈 설명 4").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 5").description("테스트 퀴즈 설명 5").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 6").description("테스트 퀴즈 설명 6").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 7").description("테스트 퀴즈 설명 7").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 8").description("테스트 퀴즈 설명 8").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 9").description("테스트 퀴즈 설명 9").build(),
+                Quiz.builder().name("테스트 퀴즈 이름 10").description("테스트 퀴즈 설명 10").build()
+        ));
 
         mockMvc.perform(get("/quizzes")
                         .contentType(APPLICATION_JSON))
@@ -129,9 +152,16 @@ class QuizControllerTest {
     @Test
     @DisplayName("퀴즈 수정 - 성공")
     void test8() throws Exception {
-        Quiz savedQuiz = quizRepository.save(new Quiz("테스트 퀴즈 이름", "테스트 퀴즈 설명"));
 
-        String content = objectMapper.writeValueAsString(new QuizModifyRequest("테스트 퀴즈 수정 이름", "테스트 퀴즈 설명 수정"));
+        Quiz savedQuiz = quizRepository.save(Quiz.builder()
+                .name("테스트 퀴즈 이름")
+                .description("테스트 퀴즈 설명")
+                .build());
+
+        String content = objectMapper.writeValueAsString(QuizModifyRequest.builder()
+                .name("테스트 퀴즈 수정 이름")
+                .description("테스트 퀴즈 설명 수정")
+                .build());
         mockMvc.perform(patch("/quizzes/" + savedQuiz.getId())
                         .contentType(APPLICATION_JSON)
                         .content(content))
@@ -147,7 +177,11 @@ class QuizControllerTest {
     @DisplayName("퀴즈 수정 - 실패(없는 quizId)")
     void test9() throws Exception {
 
-        String content = objectMapper.writeValueAsString(new QuizModifyRequest("테스트 퀴즈 수정 이름", "테스트 퀴즈 설명 수정"));
+        String content = objectMapper.writeValueAsString(QuizModifyRequest.builder()
+                .name("테스트 퀴즈 수정 이름")
+                .description("테스트 퀴즈 설명 수정")
+                .build());
+
         mockMvc.perform(patch("/quizzes/" + 1L)
                         .contentType(APPLICATION_JSON)
                         .content(content))
@@ -161,8 +195,15 @@ class QuizControllerTest {
     @DisplayName("퀴즈 수정 - 실패(퀴즈 제목 미입력)")
     void test10() throws Exception {
 
-        Quiz savedQuiz = quizRepository.save(new Quiz("테스트 퀴즈 이름", "테스트 퀴즈 설명"));
-        String content = objectMapper.writeValueAsString(new QuizModifyRequest("", "테스트 퀴즈 설명 수정"));
+        Quiz savedQuiz = quizRepository.save(Quiz.builder()
+                .name("테스트 퀴즈 이름")
+                .description("테스트 퀴즈 설명")
+                .build());
+
+        String content = objectMapper.writeValueAsString(QuizModifyRequest.builder()
+                .description("테스트 퀴즈 설명 수정")
+                .build());
+
         mockMvc.perform(patch("/quizzes/" + savedQuiz.getId())
                         .contentType(APPLICATION_JSON)
                         .content(content))
@@ -178,8 +219,16 @@ class QuizControllerTest {
     @DisplayName("퀴즈 수정 - 실패(퀴즈 설명 미입력)")
     void test11() throws Exception {
 
-        Quiz savedQuiz = quizRepository.save(new Quiz("테스트 퀴즈 이름", "테스트 퀴즈 설명"));
-        String content = objectMapper.writeValueAsString(new QuizModifyRequest("테스트 퀴즈 수정 이름", "      "));
+        Quiz savedQuiz = quizRepository.save(Quiz.builder()
+                .name("테스트 퀴즈 이름")
+                .description("테스트 퀴즈 설명")
+                .build());
+
+        String content = objectMapper.writeValueAsString(QuizModifyRequest
+                .builder()
+                .name("테스트 퀴즈 수정 이름")
+                .build());
+
         mockMvc.perform(patch("/quizzes/" + savedQuiz.getId())
                         .contentType(APPLICATION_JSON)
                         .content(content))
@@ -194,7 +243,10 @@ class QuizControllerTest {
     @Test
     @DisplayName("퀴즈 삭제 - 성공")
     void test12() throws Exception {
-        Quiz savedQuiz = quizRepository.save(new Quiz("테스트 퀴즈 이름", "테스트 퀴즈 설명"));
+        Quiz savedQuiz = quizRepository.save(Quiz.builder()
+                .name("테스트 퀴즈 이름")
+                .description("테스트 퀴즈 설명")
+                .build());
 
         mockMvc.perform(delete("/quizzes/" + savedQuiz.getId())
                         .contentType(APPLICATION_JSON))
