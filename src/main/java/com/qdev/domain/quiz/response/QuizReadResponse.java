@@ -1,11 +1,16 @@
 package com.qdev.domain.quiz.response;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class QuizReadResponse {
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
+
+    @Builder
+    public QuizReadResponse(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

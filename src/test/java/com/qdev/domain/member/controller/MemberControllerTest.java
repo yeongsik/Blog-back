@@ -202,11 +202,11 @@ class MemberControllerTest {
     @DisplayName("회원 다건 조회 - 성공")
     void readAllMemberSuccess() throws Exception {
         memberRepository.saveAll(Arrays.asList(
-                new Member("test1@gmail.com", "테스트 닉네임1", "test@1234", MemberType.NORMAL),
-                new Member("test2@gmail.com", "테스트 닉네임2", "test@1234", MemberType.NORMAL),
-                new Member("test3@gmail.com", "테스트 닉네임3", "test@1234", MemberType.NORMAL),
-                new Member("test4@gmail.com", "테스트 닉네임4", "test@1234", MemberType.NORMAL),
-                new Member("test5@gmail.com", "테스트 닉네임5", "test@1234", MemberType.NORMAL)
+                Member.builder().email("test1@gmail.com").nickname("테스트 닉네임1").password("test@1234").memberType(MemberType.NORMAL).build(),
+                Member.builder().email("test2@gmail.com").nickname("테스트 닉네임2").password("test@1234").memberType(MemberType.NORMAL).build(),
+                Member.builder().email("test3@gmail.com").nickname("테스트 닉네임3").password("test@1234").memberType(MemberType.NORMAL).build(),
+                Member.builder().email("test4@gmail.com").nickname("테스트 닉네임4").password("test@1234").memberType(MemberType.NORMAL).build(),
+                Member.builder().email("test5@gmail.com").nickname("테스트 닉네임5").password("test@1234").memberType(MemberType.NORMAL).build()
         ));
 
         // expected
@@ -221,8 +221,18 @@ class MemberControllerTest {
     @DisplayName("회원 수정 - 성공")
     void modifyMemberSuccess() throws Exception {
         // given
-        Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
-        String json = objectMapper.writeValueAsString(new MemberModifyRequest("테스트 닉네임 수정", "test1234567@", "test1234567@"));
+        Member saveMember = memberRepository.save(Member.builder().email("test1234@gmail.com")
+                .nickname("테스트 닉네임")
+                .password("password@1234")
+                .memberType(MemberType.NORMAL)
+                .build());
+
+        String json = objectMapper.writeValueAsString(MemberModifyRequest.builder()
+                .nickname("테스트 닉네임 수정")
+                .password("test1234567@")
+                .passwordConfirm("test1234567@")
+                .build());
+
 
         // when
         mockMvc.perform(patch("/members/" + saveMember.getId())
@@ -241,7 +251,12 @@ class MemberControllerTest {
     @DisplayName("회원 삭제 - 성공")
     void removeMemberSuccess() throws Exception {
         // given
-        Member saveMember = memberRepository.save(new Member("test1234@gmail.com", "테스트 닉네임", "password@1234", MemberType.NORMAL));
+        Member saveMember = memberRepository.save(Member.builder()
+                .email("test1234@gmail.com")
+                .nickname("테스트 닉네임")
+                .password("password@1234")
+                .memberType(MemberType.NORMAL)
+                .build());
 
         mockMvc.perform(delete("/members/" + saveMember.getId()))
                 .andExpect(status().isOk())

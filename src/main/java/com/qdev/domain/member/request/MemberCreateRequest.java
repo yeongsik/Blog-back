@@ -2,6 +2,7 @@ package com.qdev.domain.member.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +23,7 @@ public class MemberCreateRequest {
     @NotBlank(message = "비밀번호 확인을 입력해주세요.")
     private String passwordConfirm;
 
+    @Builder
     public MemberCreateRequest(String email, String nickname, String password, String passwordConfirm) {
         this.email = email;
         this.nickname = nickname;

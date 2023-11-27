@@ -27,13 +27,18 @@ public class MemberServiceImpl implements MemberService {
         if (!memberCreateRequest.isSamePasswordAndPasswordConfirm()) {
             throw new NotSamePasswordAndPasswordConfirmException();
         }
-        memberRepository.save(new Member(memberCreateRequest.getEmail(), memberCreateRequest.getNickname(), memberCreateRequest.getPassword() , MemberType.NORMAL));
+        memberRepository.save(Member.of(memberCreateRequest));
     }
 
     @Override
     public MemberReadResponse readOne(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
-        return new MemberReadResponse(member.getEmail(), member.getNickname(), member.getMemberType());
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new)
+
+        return MemberReadResponse.builder()
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .memberType(member.getMemberType())
+                .build();
     }
 
     @Override
