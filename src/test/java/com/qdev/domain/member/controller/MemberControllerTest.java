@@ -233,6 +233,7 @@ class MemberControllerTest {
                 .passwordConfirm("test1234567@")
                 .build());
 
+
         // when
         mockMvc.perform(patch("/members/" + saveMember.getId())
                         .contentType(APPLICATION_JSON)
