@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberReadResponse readOne(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new)
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
         return MemberReadResponse.builder()
                 .email(member.getEmail())
