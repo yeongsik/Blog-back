@@ -2,7 +2,7 @@ package com.qdev.domain.member.entity;
 
 import com.qdev.domain.member.request.MemberCreateRequest;
 import com.qdev.domain.member.request.MemberModifyRequest;
-import com.qdev.domain.quiz.request.QuizModifyRequest;
+import com.qdev.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
