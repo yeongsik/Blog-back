@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PostService {
 
-    void createPost(CreatePostRequest request);
+    Long createPost(CreatePostRequest request);
 
     void deletePost();
 

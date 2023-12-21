@@ -1,4 +1,4 @@
-package com.qdev.domain.category.entity;
+package com.qdev.domain.post.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

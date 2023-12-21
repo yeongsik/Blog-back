@@ -1,6 +1,5 @@
 package com.qdev.domain.post.entity;
 
-import com.qdev.domain.category.entity.Category;
 import com.qdev.domain.member.entity.Member;
 import com.qdev.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -9,7 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -20,7 +22,7 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String subject;
+    private String title;
 
     @ManyToOne
     private Category category;
@@ -32,13 +34,18 @@ public class Post extends BaseEntity {
     private Member writer;
 
     @OneToMany
-    private List<PostFile> postFiles;
+    private List<PostFile> postFiles = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "postTag_id")
+    )
+    private Set<PostTag> tags = new HashSet<>();
 
     @OneToMany
-    private List<PostTag> postTags;
-
-    @OneToMany
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     private Long viewCount;
 
@@ -46,21 +53,23 @@ public class Post extends BaseEntity {
 
     private Boolean isPublic;
 
+    @Enumerated(EnumType.STRING)
+    private PostStatus status;
+
     @Builder
-    public Post(Long id, String subject, Category category, String content, Member writer, List<PostFile> postFiles, List<PostTag> postTags, List<Comment> comments, Long viewCount, Long likeCount, Boolean isPublic) {
-        Id = id;
-        this.subject = subject;
+    public Post(String title, Category category, String content, Member writer, List<PostFile> postFiles, Set<PostTag> tags, List<Comment> comments, Long viewCount, Long likeCount, Boolean isPublic, PostStatus status) {
+        this.title = title;
         this.category = category;
         this.content = content;
         this.writer = writer;
         this.postFiles = postFiles;
-        this.postTags = postTags;
+        this.tags = tags;
         this.comments = comments;
         this.viewCount = viewCount;
         this.likeCount = likeCount;
         this.isPublic = isPublic;
+        this.status = status;
     }
-
     /*
     제목
 
