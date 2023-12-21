@@ -15,8 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,16 +34,19 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow();
 
         if (!request.getTagNames().isEmpty()) {
-            Set<PostTag> tags = new HashSet<>();
-            for (String tagName : request.getTagNames()) {
-                PostTag tag = tagRepository.findByName(tagName)
-                        .orElseGet(() -> tagRepository.save(PostTag.builder().name(tagName).build()));
-                tags.add(tag);
-            }
-            return postRepository.save(request.toEntity(category,tags)).getId();
+            return postRepository.save(request
+                    .toEntity(category, getPostTags(request.getTagNames()))
+            ).getId();
         }
 
         return postRepository.save(request.toEntity(category)).getId();
+    }
+
+    private Set<PostTag> getPostTags(List<String> tagNames) {
+        return tagNames.stream()
+                .map(tagName -> tagRepository.findByName(tagName)
+                        .orElseGet(() -> tagRepository.save(PostTag.builder().name(tagName).build())))
+                .collect(Collectors.toSet());
     }
 
     @Override

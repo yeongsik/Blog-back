@@ -28,7 +28,8 @@ public class PostMemberController {
      * 게시글 정보 파라미터
      */
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestParam(required = false) MultipartFile[] attachFiles, @RequestBody @Valid CreatePostRequest request) {
+    public ResponseEntity<Void> createPost(@RequestParam(required = false) MultipartFile[] attachFiles,
+                                           @RequestBody @Valid CreatePostRequest request) {
         postFileService.saveFiles(attachFiles);
         Long createdPostId = postService.createPost(request);
         URI location = ServletUriComponentsBuilder
