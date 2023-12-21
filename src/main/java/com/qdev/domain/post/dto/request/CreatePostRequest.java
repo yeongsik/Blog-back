@@ -30,16 +30,6 @@ public class CreatePostRequest {
     @NotBlank
     private PostStatus status;
 
-    public Post toEntity(Category category) {
-        return Post.builder()
-                .title(title)
-                .content(content)
-                .isPublic(isPublic)
-                .status(status)
-                .category(category)
-                .build();
-    }
-
     public Post toEntity(Category category, Set<PostTag> tags) {
         return Post.builder()
                 .title(title)

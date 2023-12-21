@@ -3,11 +3,13 @@ package com.qdev.domain.post.service;
 import com.qdev.domain.post.dto.request.CreatePostFileRequest;
 import com.qdev.domain.post.util.PostFileUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostFileServiceImpl implements PostFileService {
 
+    @Transactional
     @Override
     public void saveFiles(MultipartFile[] attachFiles) {
         for (MultipartFile attachFile : attachFiles) {

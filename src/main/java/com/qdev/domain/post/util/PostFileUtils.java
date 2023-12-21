@@ -3,7 +3,6 @@ package com.qdev.domain.post.util;
 import com.qdev.domain.post.dto.request.CreatePostFileRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 
 public class PostFileUtils {
 

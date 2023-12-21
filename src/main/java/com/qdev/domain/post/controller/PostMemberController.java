@@ -30,8 +30,7 @@ public class PostMemberController {
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestParam(required = false) MultipartFile[] attachFiles,
                                            @RequestBody @Valid CreatePostRequest request) {
-        postFileService.saveFiles(attachFiles);
-        Long createdPostId = postService.createPost(request);
+        Long createdPostId = postService.createPost(request, attachFiles);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
