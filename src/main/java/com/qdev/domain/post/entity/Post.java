@@ -20,7 +20,6 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-
     private String subject;
 
     @ManyToOne
