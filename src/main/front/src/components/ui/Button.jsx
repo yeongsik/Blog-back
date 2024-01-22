@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
+const StyledButton = styled.button`
+  background-color: ${(props) => props.theme.primaryColor};
+`;
+
 const Button = (props) => {
     return (
-        <div>
-            버튼
-        </div>
+        <StyledButton theme={props.theme}>
+            Button
+        </StyledButton>
     );
 }
 
